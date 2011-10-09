@@ -47,23 +47,21 @@ static NSMutableIndexSet * __multiValuePropertyIDSet = nil;
 
 @synthesize recordRef=_ref;
 
-+ (void) initialize
-{
-    if ( self != [ABRecord class] )
-        return;
-    
-    __multiValuePropertyIDSet = [[NSMutableIndexSet alloc] init];
-    [__multiValuePropertyIDSet addIndex: kABPersonEmailProperty];
-    [__multiValuePropertyIDSet addIndex: kABPersonAddressProperty];
-    [__multiValuePropertyIDSet addIndex: kABPersonDateProperty];
-    [__multiValuePropertyIDSet addIndex: kABPersonPhoneProperty];
-    [__multiValuePropertyIDSet addIndex: kABPersonInstantMessageProperty];
-    [__multiValuePropertyIDSet addIndex: kABPersonURLProperty];
-    [__multiValuePropertyIDSet addIndex: kABPersonRelatedNamesProperty];
-}
-
 + (Class<ABRefInitialization>) wrapperClassForPropertyID: (ABPropertyID) propID
 {
+    //the address book constants are not setup when +initialize is called,
+    //so we must do any setup here
+    if (!__multiValuePropertyIDSet) {
+        __multiValuePropertyIDSet = [[NSMutableIndexSet alloc] init];
+        [__multiValuePropertyIDSet addIndex: kABPersonEmailProperty];
+        [__multiValuePropertyIDSet addIndex: kABPersonAddressProperty];
+        [__multiValuePropertyIDSet addIndex: kABPersonDateProperty];
+        [__multiValuePropertyIDSet addIndex: kABPersonPhoneProperty];
+        [__multiValuePropertyIDSet addIndex: kABPersonInstantMessageProperty];
+        [__multiValuePropertyIDSet addIndex: kABPersonURLProperty];
+        [__multiValuePropertyIDSet addIndex: kABPersonRelatedNamesProperty];
+    }
+    
     if ( [__multiValuePropertyIDSet containsIndex: propID] )
         return ( [ABMultiValue class] );
     
